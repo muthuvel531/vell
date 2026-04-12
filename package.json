@@ -1,5 +1,5 @@
 {
-  
+  "homepage": "https://muthuvel531.github.io/last",
  
   "name": "my-project",
   
@@ -41,6 +41,7 @@
     
  
   "deploy": "gh-pages -d out"
+ 
   
  
   },
