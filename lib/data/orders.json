@@ -1,0 +1,72 @@
+[
+  {
+    "id": "ORD-1774705638896",
+    "orderNumber": "ORD-1002",
+    "items": [
+      {
+        "id": "2",
+        "name": "Masala Dosa",
+        "description": "Crispy fermented crepe filled with spiced potato filling",
+        "price": 50,
+        "image": "/images/dosa.jpg",
+        "category": "breakfast",
+        "available": true,
+        "isSpecial": true,
+        "quantity": 4
+      }
+    ],
+    "total": 200,
+    "status": "completed",
+    "customerName": "elavarasan",
+    "customerPhone": "9003571869",
+    "paymentMethod": "upi",
+    "isPaid": true,
+    "createdAt": "2026-03-28T13:47:18.896Z"
+  },
+  {
+    "id": "ORD-1774705561014",
+    "orderNumber": "ORD-1001",
+    "items": [
+      {
+        "id": "3",
+        "name": "Plain Dosa",
+        "description": "Crispy fermented crepe served with sambar and chutneys",
+        "price": 40,
+        "image": "/images/dosa.jpg",
+        "category": "breakfast",
+        "available": true,
+        "quantity": 1
+      }
+    ],
+    "total": 40,
+    "status": "completed",
+    "customerName": "elavarasan",
+    "customerPhone": "6545745649",
+    "paymentMethod": "upi",
+    "isPaid": true,
+    "createdAt": "2026-03-28T13:46:01.014Z"
+  },
+  {
+    "id": "ORD-1774675488639",
+    "orderNumber": "ORD-1001",
+    "items": [
+      {
+        "id": "special-1",
+        "name": "Today's Special Thali",
+        "description": "Extra items with dessert included. Limited quantity available!",
+        "price": 70,
+        "image": "/images/hero-food.jpg",
+        "category": "meals",
+        "available": true,
+        "quantity": 1
+      }
+    ],
+    "total": 70,
+    "status": "completed",
+    "customerName": "John Doe",
+    "customerPhone": "9999999999",
+    "paymentMethod": "cash",
+    "isPaid": false,
+    "createdAt": "2026-03-28T05:24:48.639Z"
+  }
+]
