@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { CartProvider } from '@/components/cart-provider'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
         <CartProvider>
           {children}
         </CartProvider>
+        <Toaster />
         <Analytics />
       </body>
     </html>

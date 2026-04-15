@@ -13,13 +13,6 @@ export interface CartItem extends MenuItem {
   quantity: number;
 }
 
-export interface Codeword {
-  id: string;
-  code: string;
-  active: boolean;
-  createdAt: Date;
-}
-
 export interface Order {
   id: string;
   orderNumber: string;
@@ -28,12 +21,11 @@ export interface Order {
   status: 'pending' | 'preparing' | 'ready' | 'completed';
   customerName: string;
   customerPhone: string;
-  paymentMethod: 'upi' | 'card' | 'cash' | 'codeword';
+  paymentMethod: 'upi' | 'cash';
   isPaid: boolean;
-  codewordUsed?: string;
+  paymentReference?: string;
   createdAt: Date;
 }
-
 export interface DailySpecial {
   id: string;
   name: string;

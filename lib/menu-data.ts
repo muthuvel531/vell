@@ -721,11 +721,11 @@ export const dailySpecials: DailySpecial[] = [
   },
   {
     id: 'special-2',
-    name: 'Combo Breakfast',
+    name: 'combo 1',
     description: '2 Idli + 1 Vada + Sambar + Coffee',
     price: 55,
     originalPrice: 75,
-    image: '/images/Water Bottle.png',
+    image: '/images/Chicken Meals.png',
     available: true,
     date: new Date().toISOString().split('T')[0],
   },
@@ -738,5 +738,4 @@ export const categories = [
   { id: 'beverages', name: 'Beverages' },
   { id: 'meals', name: 'Meals' },
 ];
-
 

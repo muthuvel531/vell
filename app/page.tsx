@@ -56,12 +56,11 @@ export default function HomePage() {
           <div className="relative container mx-auto px-4 py-20">
             <div className="max-w-xl">
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance">
-                Delicious Food,
-                <br />
-                <span className="text-primary">Campus Style</span>
+                JJ FAMILEY              <br />
+                <span className="text-primary">RESTORENT </span>
               </h1>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-                Fresh, affordable, and ready when you are. Order online from your college canteen and skip the queue.
+               Fresh, affordable, and ready when you are. Order online from your home and skip the queue.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link href="/menu">
@@ -132,6 +131,20 @@ export default function HomePage() {
                   <MenuCard key={item.id} item={item} />
                 ))
               )}
+
+
+               {popularItems.length > 0 ? (
+                popularItems.map((item) => (
+                  <MenuCard key={item.id} item={item} />
+                ))
+              ) : (
+                menuItems.slice(0, 5).map((item) => (
+                  <MenuCard key={item.id} item={item} />
+                ))
+              )}
+
+
+              
             </div>
           </div>
         </section>

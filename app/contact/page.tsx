@@ -71,7 +71,7 @@ export default function ContactPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-foreground font-medium">+91 xxxxxxxxxx</p>
+                  <p className="text-foreground font-medium">+91 9944701257</p>
                   <p className="text-sm text-muted-foreground mt-1">
                       JJ Family Restaurant palayamkottai Tirunelveli
                   </p>

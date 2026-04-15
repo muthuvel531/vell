@@ -5,11 +5,10 @@ import { Flame, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { dailySpecials } from '@/lib/menu-data';
 import { useCart } from '@/components/cart-provider';
 
 export function DailySpecials() {
-  const { addItem } = useCart();
+  const { addItem, dailySpecials } = useCart();
 
   return (
     <section className="py-12">

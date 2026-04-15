@@ -1,7 +1,7 @@
 "use client";
-
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { CartItem, MenuItem, Order, Codeword } from '@/lib/types';
+import { CartItem, MenuItem, Order, DailySpecial } from '@/lib/types';
+import { menuItems as initialMenuItems, dailySpecials as initialDailySpecials } from '@/lib/menu-data';
 
 interface CartContextType {
   items: CartItem[];
@@ -14,9 +14,13 @@ interface CartContextType {
   orders: Order[];
   addOrder: (order: Order) => void;
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
-  codewords: Codeword[];
-  addCodeword: (code: string) => void;
-  toggleCodewordActive: (id: string) => void;
+  updatePaymentStatus: (orderId: string, isPaid: boolean) => void;
+  menuItems: MenuItem[];
+  addMenuItem: (item: Omit<MenuItem, 'id'>) => void;
+  updateMenuItem: (item: MenuItem) => void;
+  removeMenuItem: (id: string) => void;
+  dailySpecials: DailySpecial[];
+  updateDailySpecial: (special: DailySpecial) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -24,16 +28,21 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [codewords, setCodewords] = useState<Codeword[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(initialMenuItems);
+  const [dailySpecials, setDailySpecials] = useState<DailySpecial[]>(initialDailySpecials);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load from localStorage/API on mount
   React.useEffect(() => {
     const savedItems = localStorage.getItem('cart-items');
-    const savedCodewords = localStorage.getItem('cart-codewords');
+    const savedMenuItems = localStorage.getItem('cart-menu-items');
+    const savedDailySpecials = localStorage.getItem('cart-daily-specials');
+    const savedOrders = localStorage.getItem('cart-orders');
 
     if (savedItems) setItems(JSON.parse(savedItems));
-    if (savedCodewords) setCodewords(JSON.parse(savedCodewords));
+    if (savedMenuItems) setMenuItems(JSON.parse(savedMenuItems));
+    if (savedDailySpecials) setDailySpecials(JSON.parse(savedDailySpecials));
+    if (savedOrders) setOrders(JSON.parse(savedOrders));
     
     // Fetch orders from server
     const fetchOrders = () => {
@@ -69,8 +78,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!isInitialized) return;
-    localStorage.setItem('cart-codewords', JSON.stringify(codewords));
-  }, [codewords, isInitialized]);
+    localStorage.setItem('cart-menu-items', JSON.stringify(menuItems));
+  }, [menuItems, isInitialized]);
+
+  React.useEffect(() => {
+    if (!isInitialized) return;
+    localStorage.setItem('cart-daily-specials', JSON.stringify(dailySpecials));
+  }, [dailySpecials, isInitialized]);
 
   const addItem = useCallback((item: MenuItem) => {
     setItems((prev) => {
@@ -136,22 +150,47 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       console.error('Failed to update order on server:', err);
     }
   }, []);
+  const updatePaymentStatus = useCallback(async (orderId: string, isPaid: boolean) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, isPaid } : o))
+    );
 
-  const addCodeword = useCallback((code: string) => {
-    const newCodeword: Codeword = {
-      id: `CW-${Date.now()}`,
-      code: code.toUpperCase(),
-      active: true,
-      createdAt: new Date(),
-    };
-    setCodewords((prev) => [newCodeword, ...prev]);
+    try {
+      await fetch('/api/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, isPaid }),
+      });
+    } catch (err) {
+      console.error('Failed to update payment status on server:', err);
+    }
   }, []);
 
-  const toggleCodewordActive = useCallback((id: string) => {
-    setCodewords((prev) =>
-      prev.map((cw) => (cw.id === id ? { ...cw, active: !cw.active } : cw))
+  const addMenuItem = useCallback((item: Omit<MenuItem, 'id'>) => {
+    const newItem: MenuItem = {
+      ...item,
+      id: `ITEM-${Date.now()}`,
+    };
+    setMenuItems((prev) => [newItem, ...prev]);
+  }, []);
+
+  const updateMenuItem = useCallback((item: MenuItem) => {
+    setMenuItems((prev) =>
+      prev.map((i) => (i.id === item.id ? item : i))
     );
   }, []);
+
+  const removeMenuItem = useCallback((id: string) => {
+    setMenuItems((prev) => prev.filter((i) => i.id !== id));
+  }, []);
+
+  const updateDailySpecial = useCallback((special: DailySpecial) => {
+    setDailySpecials((prev) =>
+      prev.map((s) => (s.id === special.id ? special : s))
+    );
+  }, []);
+
+
 
   return (
     <CartContext.Provider
@@ -166,9 +205,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         orders,
         addOrder,
         updateOrderStatus,
-        codewords,
-        addCodeword,
-        toggleCodewordActive,
+        updatePaymentStatus,
+        menuItems,
+        addMenuItem,
+        updateMenuItem,
+        removeMenuItem,
+        dailySpecials,
+        updateDailySpecial,
       }}
     >
       {children}

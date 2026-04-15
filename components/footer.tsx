@@ -52,12 +52,12 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-foreground mb-4">Timings</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Monday - Friday</li>
-              <li className="font-medium text-foreground">7:00 AM - 7:00 PM</li>
-              <li className="mt-2">Saturday</li>
+              <li>Monday - sunday</li>
+              <li className="font-medium text-foreground">6:00 AM - 3:00 AM</li>
+              {/* <li className="mt-2">Saturday</li>
               <li className="font-medium text-foreground">8:00 AM - 4:00 PM</li>
               <li className="mt-2">Sunday</li>
-              <li className="font-medium text-foreground">Closed</li>
+              <li className="font-medium text-foreground">Closed</li> */}
             </ul>
           </div>
 
@@ -67,23 +67,23 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
-                <span>Ground Floor, Main Building, ABC College Campus</span>
+                <span>JJ Family Restaurant palayamkottai</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4 shrink-0 text-primary" />
-                <span>+91 98765 43210</span>
+                <span>+91 9944701257</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
+              {/* <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 shrink-0 text-primary" />
-                <span>canteen@abccollege.edu</span>
-              </li>
+                <span>jjfamilyrestorend.</span>
+              </li> */}
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+        {/* <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} Campus Bites - ABC College Canteen. All rights reserved.</p>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

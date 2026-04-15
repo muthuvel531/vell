@@ -8,10 +8,12 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { MenuCard } from '@/components/menu-card';
 import { DailySpecials } from '@/components/daily-specials';
-import { menuItems, categories } from '@/lib/menu-data';
+import { categories } from '@/lib/menu-data';
+import { useCart } from '@/components/cart-provider';
 import { cn } from '@/lib/utils';
 
 export default function MenuPage() {
+  const { menuItems } = useCart();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 

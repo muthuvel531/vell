@@ -13,12 +13,11 @@ import { Order } from '@/lib/types';
 
 export function PaymentForm() {
   const router = useRouter();
-  const { items, total, clearCart, addOrder, codewords } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'cash' | 'codeword'>('upi');
-  const [codeword, setCodeword] = useState('');
-  const [codewordError, setCodewordError] = useState('');
+  const { items, total, clearCart, addOrder } = useCart();
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'cash'>('upi');
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [upiReference, setUpiReference] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,24 +27,12 @@ export function PaymentForm() {
       return;
     }
 
-    if (paymentMethod === 'codeword') {
-      const validCodeword = codewords.find(
-        (cw) => cw.code === codeword.toUpperCase() && cw.active
-      );
-
-      if (!validCodeword) {
-        setCodewordError('Invalid or inactive codeword');
-        return;
-      }
-      setCodewordError('');
-    }
-
     setIsProcessing(true);
 
     // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const isPaid = paymentMethod === 'codeword' || paymentMethod === 'card' || paymentMethod === 'upi';
+    const isPaid = false;
 
     // Generate a short, sequential reference number (ORD-1001, ORD-1002, ...)
     const lastNum = parseInt(localStorage.getItem('last-order-number') || '1000', 10);
@@ -63,7 +50,7 @@ export function PaymentForm() {
       customerPhone,
       paymentMethod,
       isPaid,
-      ...(paymentMethod === 'codeword' ? { codewordUsed: codeword.toUpperCase() } : {}),
+      paymentReference: upiReference || undefined,
       createdAt: new Date(),
     };
 
@@ -116,8 +103,7 @@ export function PaymentForm() {
           <RadioGroup
             value={paymentMethod}
             onValueChange={(v) => {
-              setPaymentMethod(v as 'upi' | 'card' | 'cash' | 'codeword');
-              setCodewordError(''); // Clear error when switching methods
+              setPaymentMethod(v as 'upi' | 'cash');
             }}
             className="space-y-3"
           >
@@ -133,17 +119,6 @@ export function PaymentForm() {
             </div>
             
             <div className="flex items-center space-x-3 rounded-lg border border-border p-4 cursor-pointer hover:bg-muted/50 transition-colors">
-              <RadioGroupItem value="card" id="card" />
-              <Label htmlFor="card" className="flex items-center gap-3 cursor-pointer flex-1">
-                <CreditCard className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="font-medium">Card Payment</p>
-                  <p className="text-sm text-muted-foreground">Credit or Debit card</p>
-                </div>
-              </Label>
-            </div>
-            
-            <div className="flex items-center space-x-3 rounded-lg border border-border p-4 cursor-pointer hover:bg-muted/50 transition-colors">
               <RadioGroupItem value="cash" id="cash" />
               <Label htmlFor="cash" className="flex items-center gap-3 cursor-pointer flex-1">
                 <Banknote className="h-5 w-5 text-primary" />
@@ -153,75 +128,25 @@ export function PaymentForm() {
                 </div>
               </Label>
             </div>
-
-            <div className="flex items-center space-x-3 rounded-lg border border-border p-4 cursor-pointer hover:bg-muted/50 transition-colors">
-              <RadioGroupItem value="codeword" id="codeword" />
-              <Label htmlFor="codeword" className="flex items-center gap-3 cursor-pointer flex-1">
-                <Banknote className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="font-medium">Use a Codeword</p>
-                  <p className="text-sm text-muted-foreground">Pay with a valid codeword</p>
-                </div>
-              </Label>
-            </div>
           </RadioGroup>
         </CardContent>
       </Card>
-
-      {/* Codeword Details (shown when Codeword is selected) */}
-      {paymentMethod === 'codeword' && (
-        <Card>
-          <CardContent className="pt-6 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="codeword-input">Enter Codeword</Label>
-              <Input 
-                id="codeword-input" 
-                placeholder="e.g. FREEFOOD" 
-                value={codeword}
-                onChange={(e) => {
-                  setCodeword(e.target.value);
-                  if (codewordError) setCodewordError('');
-                }}
-                className={codewordError ? 'border-destructive' : ''}
-              />
-              {codewordError && (
-                <p className="text-sm text-destructive">{codewordError}</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* UPI Details (shown when UPI is selected) */}
       {paymentMethod === 'upi' && (
         <Card>
           <CardContent className="pt-6">
-            <div className="text-center p-4 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground mb-2">Scan QR code or pay to</p>
-              <p className="font-mono text-lg font-semibold text-foreground">canteen@upi</p>
-              <p className="text-sm text-muted-foreground mt-2">Amount: ₹{total}</p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Card Details (shown when Card is selected) */}
-      {paymentMethod === 'card' && (
-        <Card>
-          <CardContent className="pt-6 space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="cardNumber">Card Number</Label>
-              <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="expiry">Expiry Date</Label>
-                <Input id="expiry" placeholder="MM/YY" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="cvv">CVV</Label>
-                <Input id="cvv" placeholder="123" type="password" />
-              </div>
+              <Label htmlFor="upi-ref" className="text-sm">Transaction Reference (Optional)</Label>
+              <Input
+                id="upi-ref"
+                placeholder="Enter 12-digit UPI Ref No."
+                value={upiReference}
+                onChange={(e) => setUpiReference(e.target.value)}
+              />
+              <p className="text-[10px] text-muted-foreground italic">
+                Entering reference number helps us verify your payment faster.
+              </p>
             </div>
           </CardContent>
         </Card>
